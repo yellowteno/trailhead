@@ -1,0 +1,17 @@
+trigger ClosedOpportunityTrigger on Opportunity (after insert, after update) {
+    List<Task> tskList = new List<Task>();
+
+    for (Opportunity o : [SELECT Id,StageName  FROM Opportunity  WHERE StageName  = 'Closed Won' AND Id IN :Trigger.New]) {
+        // Add a default opportunity for this account
+         if(Trigger.isInsert || Trigger.isUpdate) {
+            tskList.add(new Task(WhatId  =o.id,
+                                        Subject = 'Follow Up Test Task'
+                                       ));
+         }
+    }
+    if (tskList.size() > 0) {
+        upsert tskList;
+    }
+
+
+}

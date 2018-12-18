@@ -1,0 +1,53 @@
+@isTest
+private class AddPrimaryContactTest {
+
+    @testSetup
+    static void setup() {
+        // Implement test code
+
+        List<Account> accList = new List<Account>();
+
+        for(Integer i = 0 ; i < 50 ; i++){
+            accList.add(new Account(BillingState = 'NY' , Name = 'Test'+i));
+        }
+
+
+        for(Integer i =50 ; i <100; i++ ){
+
+            accList.add(new Account(BillingState = 'CA', Name = 'test'+i));
+        }
+
+
+        if(accList.size() == 100){
+            Database.insert(accList,false);
+        }
+
+
+
+
+
+    }
+
+
+
+    @isTest static void test_method_one() {
+        // Implement test code
+
+
+        Contact cObj = new Contact (LastName = 'Bansal', Email = 'xyz@gmail.com');
+        Database.insert(cObj,false);
+        String st = 'CA';
+
+      AddPrimaryContact classObj = new AddPrimaryContact(cObj ,st);
+
+      Test.startTest();
+         System.enqueueJob(classObj);
+      Test.stopTest();
+
+      System.assertEquals(50 , [select count() from Contact where accountID IN (SELECT id FROM Account WHERE BillingState = :st)]);
+
+
+
+    }
+
+}
