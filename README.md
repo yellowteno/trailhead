@@ -1,2 +1,2 @@
 # trailhead
-Salesforce trailhead
+Salesforce trailhead sample
